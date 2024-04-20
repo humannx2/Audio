@@ -9,7 +9,7 @@ while True:
             object.adjust_for_ambient_noise(mic,duration=0.2)
             if not listening:
                 print("Say 'Start' to begin the Recognition and 'Stop' to end.")
-                audio=object.listen(mic)
+                audio=object.listen(mic, timeout=10)
                 start_stop=object.recognize_google(audio)
                 start_stop=start_stop.lower()
                 if "start" in start_stop:
@@ -27,4 +27,8 @@ while True:
             else:
                 print(f"Recognized Text is: {text}")
     except sr.UnknownValueError:
-        continue
+        print("Couldn't Understand the Audio.")
+    except sr.WaitTimeoutError:
+        listening=False
+        print("Timeout! Try running again")
+        exit()
