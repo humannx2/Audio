@@ -5,10 +5,12 @@ app=Flask(__name__)
 
 
 def audio(audiofile):
-    recogniser=sr.recognizers
+    # object creation
+    recogniser=sr.Recognizer()
     with sr.AudioFile(audiofile) as source:
+        #listens the audio file
         audio_data=recogniser.record(source)
-        text=recogniser.recognize_google(audio_data)
+        text=recogniser.recognize_google(audio_data) #converts into text
         text=text.lower()
         return text
 
@@ -19,12 +21,13 @@ def home():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    print(request.files)
     if 'file' not in request.files:
-        return jsonify({"message":"No file part"}) #chatgpt
+        return jsonify({"message":"No file part"}) 
 
-    file=request.files('file')
+    file=request.files['file']
     if file.filename=='':
-        return jsonify({"message":"No file part"}) #chatgpt
+        return jsonify({"message":"No file part"}) 
 
     try:
         text=audio(file)
